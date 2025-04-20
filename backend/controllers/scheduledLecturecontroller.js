@@ -3,14 +3,22 @@ const moment = require("moment");
 
 exports.getLectures = async (req, res) => {
   try {
-    const lectures = await ScheduledLecture.find()
+    let query = {}; 
+
+    if (req.instructor) {
+      query.instructor = req.instructor._id;
+    }
+
+    const lectures = await ScheduledLecture.find(query)
       .populate("instructor")
       .populate("course");
+
     res.json(lectures);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ error: err.message }); 
   }
 };
+
 exports.scheduleLecture = async (req, res) => {
   try {
     const { instructorId, courseId, date, time, duration } = req.body;
