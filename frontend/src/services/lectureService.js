@@ -1,13 +1,13 @@
-import axios from "axios";
+import api from "./api";
 
-const API = "http://localhost:5000/api/lectures";
+
 
 export const getLectures = async () => {
-  const res = await axios.get(API);
+  const res = await api.get("/lectures");
   return res.data;
 };
 
 export const scheduleLecture = async (data) => {
-  const res = await axios.post(API, data);
+  const res = await api.post("/lectures", data);
   return res.data;
 };

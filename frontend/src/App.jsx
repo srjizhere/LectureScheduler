@@ -28,8 +28,8 @@ function App() {
           <Route path="/admin" element={<AdminLayout />}>
             <Route index element={<DashboardHome />} />
             <Route path="instructors" element={<InstructorList />} />
-            <Route path="courses" element={<AddCourse />} />
-            <Route path="schedule" element={<ScheduleLecture />} />
+            <Route path="add-course" element={<AddCourse />} />
+            <Route path="schedule-lecture" element={<ScheduleLecture />} />
             <Route path="lectures" element={<LectureListAdmin />} />
           </Route>
 

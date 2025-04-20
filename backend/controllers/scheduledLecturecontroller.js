@@ -1,8 +1,8 @@
-const Lecture = require("../models/Lecture");
+const ScheduledLecture = require("../models/ScheduledLecture");
 
 exports.getLectures = async (req, res) => {
   try {
-    const lectures = await Lecture.find()
+    const lectures = await ScheduledLecture.find()
       .populate("instructor")
       .populate("course");
     res.json(lectures);
@@ -15,7 +15,7 @@ exports.scheduleLecture = async (req, res) => {
   try {
     const { instructor, date, time, duration } = req.body;
 
-    const lectures = await Lecture.find({ instructor, date });
+    const lectures = await ScheduledLecture.find({ instructor, date });
 
     const conflict = lectures.find((lec) => lec.time === time);
 
@@ -25,7 +25,7 @@ exports.scheduleLecture = async (req, res) => {
         .json({ error: "Lecture time overlaps for this instructor" });
     }
 
-    const lecture = new Lecture(req.body);
+    const lecture = new ScheduledLecture(req.body);
     await lecture.save();
     res.json(lecture);
   } catch (err) {

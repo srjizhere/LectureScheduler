@@ -6,7 +6,7 @@ const api = axios.create({
 });
 
 api.interceptors.request.use((config) => {
-    debugger
+    
   const user = JSON.parse(localStorage.getItem("user"));
   const token = user?.token;
   

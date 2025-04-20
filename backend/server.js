@@ -6,7 +6,7 @@ require('dotenv').config()
 const connectDB = require("./config/db");
 const instructorRoutes = require("./routes/instructorRoutes");
 const courseRoutes = require("./routes/courseRoutes");
-const lectureRoutes = require("./routes/lectureRoutes");
+const lectureRoutes = require("./routes/ScheduledLectureRoutes.js");
 const authRoutes = require("./routes/authRoutes");
 const protect = require("./middleware/authmiddelware.js");
 

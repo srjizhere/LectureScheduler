@@ -1,13 +1,11 @@
-import axios from "axios";
-
-const API = "http://localhost:5000/api/courses";
+import api from "./api";
 
 export const getCourses = async () => {
-  const res = await axios.get(API);
+  const res = await api.get("/courses");
   return res.data;
 };
 
 export const createCourse = async (data) => {
-  const res = await axios.post(API, data);
+  const res = await api.post("/courses", data);
   return res.data;
 };
