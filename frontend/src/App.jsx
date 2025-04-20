@@ -1,35 +1,46 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { Provider } from "react-redux";
+import store from "./redux/store";
+import Login from "./pages/auth/Login";
+
+// Layouts
+import AdminLayout from "./layouts/AdminLayout";
+import InstructorLayout from "./layouts/InstructorLayout";
+
+// Admin Pages
+import DashboardHome from "./pages/components/DashboardHome"; // ✅ from components
+import InstructorList from "./pages/admin/InstructorList";
+import AddCourse from "./pages/admin/AddCourse";
+import ScheduleLecture from "./pages/admin/ScheduleLecture";
+import LectureListAdmin from "./pages/components/LectureList";
+
+// Instructor Pages
+import InstructorLectures from "./pages/instructor/LectureList";
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <Provider store={store}>
+      <Router>
+        <Routes>
+          {/* Admin Layout */}
+          <Route path="/" element={<Login />} />
+          <Route path="/admin" element={<AdminLayout />}>
+            <Route index element={<DashboardHome />} />
+            <Route path="instructors" element={<InstructorList />} />
+            <Route path="courses" element={<AddCourse />} />
+            <Route path="schedule" element={<ScheduleLecture />} />
+            <Route path="lectures" element={<LectureListAdmin />} />
+          </Route>
+
+          {/* Instructor Layout */}
+          <Route path="/instructor" element={<InstructorLayout />}>
+            <Route index element={<InstructorLectures />} />
+          </Route>
+        </Routes>
+      </Router>
+    </Provider>
+  );
 }
 
-export default App
+export default App;
