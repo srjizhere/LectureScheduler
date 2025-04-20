@@ -61,8 +61,8 @@ const LectureList = () => {
             <TableBody>
               {lectures.map((lecture) => (
                 <TableRow key={lecture._id}>
-                  <TableCell>{getCourseName(lecture.courseId)}</TableCell>
-                  <TableCell>{getInstructorName(lecture.instructorId)}</TableCell>
+                  <TableCell>{lecture?.course?.name}</TableCell>
+                  <TableCell>{lecture?.instructor?.name}</TableCell>
                   <TableCell>{lecture.date}</TableCell>
                   <TableCell>{lecture.time}</TableCell>
                   <TableCell>{lecture.duration} min</TableCell>

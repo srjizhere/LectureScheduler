@@ -1,6 +1,14 @@
-// src/components/AddCourse.jsx
 import React, { useState } from "react";
-import { TextField, Button, Typography, Box, Paper, Grid } from "@mui/material";
+import {
+  TextField,
+  Button,
+  Typography,
+  Box,
+  Paper,
+  Grid,
+  IconButton,
+} from "@mui/material";
+import { Add, Delete } from "@mui/icons-material";
 import { useDispatch } from "react-redux";
 import { createCourse } from "../../services/courseService";
 import { fetchCourses } from "../../redux/slices/courseSlice";
@@ -15,23 +23,30 @@ const AddCourse = () => {
     image: "",
     videos: [{ title: "", url: "" }],
   });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setForm((prev) => ({ ...prev, [name]: value }));
+  };
+
   const handleVideoChange = (index, field, value) => {
     const updatedVideos = [...form.videos];
     updatedVideos[index][field] = value;
-    setForm({ ...form, videos: updatedVideos });
+    setForm((prev) => ({ ...prev, videos: updatedVideos }));
   };
 
   const addVideoField = () => {
-    setForm({ ...form, videos: [...form.videos, { title: "", url: "" }] });
+    setForm((prev) => ({
+      ...prev,
+      videos: [...prev.videos, { title: "", url: "" }],
+    }));
   };
 
   const removeVideoField = (index) => {
-    const updatedVideos = form.videos.filter((_, i) => i !== index);
-    setForm({ ...form, videos: updatedVideos });
-  };
-
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+    setForm((prev) => ({
+      ...prev,
+      videos: prev.videos.filter((_, i) => i !== index),
+    }));
   };
 
   const handleSubmit = async (e) => {
@@ -39,93 +54,80 @@ const AddCourse = () => {
     try {
       await createCourse(form);
       dispatch(fetchCourses());
-      setForm({ name: "", level: "", description: "", image: "" });
+      setForm({
+        name: "",
+        level: "",
+        description: "",
+        image: "",
+        videos: [{ title: "", url: "" }],
+      });
     } catch (error) {
       console.error("Failed to add course", error);
     }
   };
 
   return (
-    <Paper elevation={3} sx={{ p: 4, maxWidth: 600, margin: "auto" }}>
+    <Paper elevation={3} sx={{ p: 4, maxWidth: 700, margin: "auto" }}>
       <Typography variant="h5" gutterBottom>
         Add New Course
       </Typography>
       <Box component="form" onSubmit={handleSubmit}>
         <Grid container spacing={2}>
+          {["name", "level", "description", "image"].map((field) => (
+            <Grid item xs={12} key={field}>
+              <TextField
+                label={field === "image" ? "Image URL" : field.charAt(0).toUpperCase() + field.slice(1)}
+                name={field}
+                fullWidth
+                value={form[field]}
+                onChange={handleChange}
+                multiline={field === "description"}
+                rows={field === "description" ? 4 : 1}
+                required={field !== "description" && field !== "image"}
+              />
+            </Grid>
+          ))}
+
           <Grid item xs={12}>
-            <TextField
-              label="Course Name"
-              name="name"
-              fullWidth
-              value={form.name}
-              onChange={handleChange}
-              required
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <TextField
-              label="Level"
-              name="level"
-              fullWidth
-              value={form.level}
-              onChange={handleChange}
-              required
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <TextField
-              label="Description"
-              name="description"
-              fullWidth
-              multiline
-              rows={4}
-              value={form.description}
-              onChange={handleChange}
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <TextField
-              label="Image URL"
-              name="image"
-              fullWidth
-              value={form.image}
-              onChange={handleChange}
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <Typography variant="h6">Lecture Videos</Typography>
+            <Typography variant="h6" sx={{ mb: 1 }}>
+              Lecture Videos
+            </Typography>
             {form.videos.map((video, index) => (
-              <Box key={index} sx={{ mb: 2 }}>
-                <TextField
-                  label="Video Title"
-                  fullWidth
-                  value={video.title}
-                  onChange={(e) =>
-                    handleVideoChange(index, "title", e.target.value)
-                  }
-                  sx={{ mb: 1 }}
-                />
-                <TextField
-                  label="Video URL"
-                  fullWidth
-                  value={video.url}
-                  onChange={(e) =>
-                    handleVideoChange(index, "url", e.target.value)
-                  }
-                  sx={{ mb: 1 }}
-                />
-                <Button
-                  variant="outlined"
-                  color="error"
-                  onClick={() => removeVideoField(index)}
-                  disabled={form.videos.length === 1}
-                >
-                  Remove
-                </Button>
-              </Box>
+              <Grid container spacing={1} key={index} alignItems="center" sx={{ mb: 1 }}>
+                <Grid item xs={5}>
+                  <TextField
+                    label="Video Title"
+                    fullWidth
+                    value={video.title}
+                    onChange={(e) => handleVideoChange(index, "title", e.target.value)}
+                  />
+                </Grid>
+                <Grid item xs={5}>
+                  <TextField
+                    label="Video URL"
+                    fullWidth
+                    value={video.url}
+                    onChange={(e) => handleVideoChange(index, "url", e.target.value)}
+                  />
+                </Grid>
+                <Grid item xs={2}>
+                  <IconButton
+                    onClick={() => removeVideoField(index)}
+                    disabled={form.videos.length === 1}
+                    color="error"
+                  >
+                    <Delete />
+                  </IconButton>
+                </Grid>
+              </Grid>
             ))}
-            <Button variant="outlined" onClick={addVideoField}>
-              Add Another Video
+            <Button
+              variant="outlined"
+              startIcon={<Add />}
+              onClick={addVideoField}
+              sx={{ mt: 1 }}
+            >
+              Add Video
             </Button>
           </Grid>
 

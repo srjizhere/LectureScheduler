@@ -12,34 +12,41 @@ exports.getLectures = async (req, res) => {
   }
 };
 
-
 exports.scheduleLecture = async (req, res) => {
   try {
-    const { instructor, date, time, duration } = req.body;
+    const { instructorId, courseId, date, time, duration } = req.body;
 
     const newStart = moment(`${date} ${time}`, "YYYY-MM-DD HH:mm");
     const newEnd = moment(newStart).add(duration, "minutes");
 
-    const lectures = await ScheduledLecture.find({ instructor, date });
+    const existingLectures = await ScheduledLecture.find({
+      instructor: instructorId
+    });
 
-    const conflict = lectures.find((lec) => {
-      const existingStart = moment(`${lec.date} ${lec.time}`, "YYYY-MM-DD HH:mm");
-      const existingEnd = moment(existingStart).add(lec.duration, "minutes");
+    const conflict = existingLectures.find((lecture) => {
+      const existingStart = moment(`${lecture.date} ${lecture.time}`, "YYYY-MM-DD HH:mm");
+      const existingEnd = moment(existingStart).add(lecture.duration, "minutes");
 
       return newStart.isBefore(existingEnd) && existingStart.isBefore(newEnd);
     });
 
     if (conflict) {
       return res.status(400).json({
-        error: "Lecture time overlaps for this instructor",
+        error: "Lecture time overlaps for this instructor.",
       });
     }
 
-    const lecture = new ScheduledLecture(req.body);
-    await lecture.save();
-    res.json(lecture);
+    const newLecture = new ScheduledLecture({
+      instructor: instructorId,
+      course: courseId,
+      date,
+      time,
+      duration,
+    });
+
+    await newLecture.save();
+    res.status(201).json(newLecture);
   } catch (err) {
-    res.status(400).json({ error: err.message });
+    res.status(500).json({ error: err.message });
   }
 };
-
