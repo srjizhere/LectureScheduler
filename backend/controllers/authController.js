@@ -3,8 +3,8 @@ const Admin = require("../models/Admin");
 const Instructor = require("../models/Instructor");
 const bcrypt = require("bcryptjs");
 
-const generateToken = (id) => {
-  return jwt.sign({ id }, process.env.JWT_SECRET, {
+const generateToken = (id,type) => {
+  return jwt.sign({ id ,type}, process.env.JWT_SECRET, {
     expiresIn: "7d",
   });
 };
@@ -41,7 +41,7 @@ const loginUser = async (req, res) => {
       name: user.name,
       email: user.email,
       type,
-      token: generateToken(user._id),
+      token: generateToken(user._id,user.type),
     });
   } catch (error) {
     return res.status(500).json({ message: "Login failed", error: error.message });
