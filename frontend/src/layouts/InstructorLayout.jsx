@@ -10,8 +10,13 @@ import {
   Typography,
   Box,
   CssBaseline,
+  IconButton,
 } from "@mui/material";
+import LogoutIcon from "@mui/icons-material/Logout";
 import { Link, Outlet } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { logout } from "../redux/slices/authSlice";
+import { useNavigate } from "react-router-dom";
 
 const drawerWidth = 240;
 
@@ -20,7 +25,13 @@ const InstructorLayout = () => {
     { name: "Dashboard", path: "/instructor" },
     { name: "My Lectures", path: "/instructor/lectures" },
   ];
-
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  
+  const handleLogout = () => {
+    dispatch(logout());
+    navigate("/");
+  };
   return (
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
@@ -30,6 +41,9 @@ const InstructorLayout = () => {
           <Typography variant="h6" noWrap>
             Instructor Panel
           </Typography>
+          <IconButton color="inherit" onClick={handleLogout}>
+                      <LogoutIcon />
+                    </IconButton>
         </Toolbar>
       </AppBar>
 

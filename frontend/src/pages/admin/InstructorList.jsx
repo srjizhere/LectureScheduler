@@ -33,8 +33,8 @@ const InstructorList = () => {
   const [currentInstructor, setCurrentInstructor] = useState({
     name: "",
     email: "",
+    password: "",
   });
-
   useEffect(() => {
     dispatch(fetchInstructors());
   }, [dispatch]);
@@ -59,18 +59,21 @@ const InstructorList = () => {
 
   const handleSubmit = async () => {
     try {
+      const instructorData = { ...currentInstructor };
+      if (!instructorData.password) delete instructorData.password; // avoid sending empty password
+  
       if (editMode) {
-        await updateInstructor(currentInstructor._id, currentInstructor);
+        await updateInstructor(currentInstructor._id, instructorData);
       } else {
-        await addInstructor(currentInstructor);
+        await addInstructor(instructorData);
       }
+  
       dispatch(fetchInstructors());
       handleClose();
     } catch (error) {
       console.error("Failed to save instructor", error);
     }
   };
-
   return (
     <Paper elevation={3} sx={{ p: 3 }}>
       <Box display="flex" justifyContent="space-between" alignItems="center">
@@ -118,24 +121,35 @@ const InstructorList = () => {
         <DialogTitle>
           {editMode ? "Edit Instructor" : "Add Instructor"}
         </DialogTitle>
-        <DialogContent>
-          <TextField
-            margin="dense"
-            name="name"
-            label="Name"
-            fullWidth
-            value={currentInstructor.name}
-            onChange={handleChange}
-          />
-          <TextField
-            margin="dense"
-            name="email"
-            label="Email"
-            fullWidth
-            value={currentInstructor.email}
-            onChange={handleChange}
-          />
-        </DialogContent>
+     
+<DialogContent>
+  <TextField
+    margin="dense"
+    name="name"
+    label="Name"
+    fullWidth
+    value={currentInstructor.name}
+    onChange={handleChange}
+  />
+  <TextField
+    margin="dense"
+    name="email"
+    label="Email"
+    fullWidth
+    value={currentInstructor.email}
+    onChange={handleChange}
+  />
+  <TextField
+    margin="dense"
+    name="password"
+    label={editMode ? "New Password (optional)" : "Password"}
+    type="password"
+    fullWidth
+    value={currentInstructor.password}
+    onChange={handleChange}
+  />
+</DialogContent>
+
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
           <Button onClick={handleSubmit} variant="contained">
