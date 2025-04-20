@@ -1,6 +1,6 @@
 import axios from "axios";
-
-const API = "http://localhost:5000/api/lectures";
+import {ConstantData} from '../constants/constants.js'
+const API = `${ConstantData.endPoint}/api/lectures`;
 
 export const getLectures = async () => {
   const res = await axios.get(API);

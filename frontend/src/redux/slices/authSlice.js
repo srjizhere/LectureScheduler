@@ -1,12 +1,13 @@
 // src/redux/slices/authSlice.js
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
+import {ConstantData} from '../../constants/constants'
 
 export const loginUser = createAsyncThunk(
   "auth/loginUser",
   async (credentials, thunkAPI) => {
     try {
-      const res = await axios.post("http://localhost:5000/api/auth/login", credentials);
+      const res = await axios.post(`${ConstantData.endPoint}/api/auth/login`, credentials);
       localStorage.setItem("user", JSON.stringify(res.data));
       return res.data;
     } catch (err) {
