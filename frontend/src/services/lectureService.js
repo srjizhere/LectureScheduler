@@ -11,3 +11,8 @@ export const scheduleLecture = async (data) => {
   const res = await api.post("/lectures", data);
   return res.data;
 };
+export const deleteLecture = async (id) => {
+  const res = await api.delete(`/lectures/${id}`);
+  return res.data;
+}
+

@@ -84,7 +84,7 @@ const ScheduleLecture = () => {
         duration: 60,
       });
     } catch (err) {
-      setError("Failed to schedule lecture.");
+      setError(err?.response?.data?.error  || "cannot delete request");
     }
   };
 

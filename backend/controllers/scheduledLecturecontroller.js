@@ -11,7 +11,6 @@ exports.getLectures = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
-
 exports.scheduleLecture = async (req, res) => {
   try {
     const { instructorId, courseId, date, time, duration } = req.body;
@@ -48,5 +47,24 @@ exports.scheduleLecture = async (req, res) => {
     res.status(201).json(newLecture);
   } catch (err) {
     res.status(500).json({ error: err.message });
+  }
+};
+
+
+
+
+exports.deleteLecture = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const deleted = await ScheduledLecture.findByIdAndDelete(id);
+
+    if (!deleted) {
+      return res.status(404).json({ error: "Lecture not found" });
+    }
+
+    res.json({ message: "Lecture deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ error: error.message || "Server error" });
   }
 };

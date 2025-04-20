@@ -4,5 +4,6 @@ const scheduledLectureontroller = require("../controllers/scheduledLecturecontro
 
 router.get("/", scheduledLectureontroller.getLectures);
 router.post("/", scheduledLectureontroller.scheduleLecture);
+router.delete("/:id", scheduledLectureontroller.deleteLecture);
 
 module.exports = router;
