@@ -1,20 +1,16 @@
-// src/services/instructorService.js
-import axios from "axios";
-import {ConstantData} from '../constants/constants.js'
-
-const API = `${ConstantData.endPoint}/api/instructors`;
+import api from "./api";
 
 export const getInstructors = async () => {
-  const res = await axios.get(API);
+  const res = await api.get("/instructors"); // or ConstantData.INSTRUCTORS
   return res.data;
 };
 
 export const addInstructor = async (data) => {
-  const res = await axios.post(API, data);
+  const res = await api.post("/instructors", data);
   return res.data;
 };
 
 export const updateInstructor = async (id, data) => {
-  const res = await axios.put(`${API}/${id}`, data);
+  const res = await api.put(`/instructors/${id}`, data);
   return res.data;
 };

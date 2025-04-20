@@ -19,7 +19,10 @@ import {
 } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchInstructors } from "../../redux/slices/instructorSlice";
-import { addInstructor, updateInstructor } from "../../services/instructorService";
+import {
+  addInstructor,
+  updateInstructor,
+} from "../../services/instructorService";
 
 const InstructorList = () => {
   const dispatch = useDispatch();
@@ -82,7 +85,7 @@ const InstructorList = () => {
           <CircularProgress />
         </Box>
       ) : (
-        <Table sx={{ mt: 3 }}>
+        <Table sx={{ mt: 3, minWidth: 650 }} aria-label="instructors table">
           <TableHead>
             <TableRow>
               <TableCell>Name</TableCell>
