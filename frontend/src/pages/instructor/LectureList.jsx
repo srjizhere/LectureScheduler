@@ -21,6 +21,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { fetchLectures } from "../../redux/slices/lectureSlice";
 import { fetchCourses } from "../../redux/slices/courseSlice";
+import { markLectureAsAttended } from "../../services/lectureService";
 
 const InstructorLectureList = () => {
   const dispatch = useDispatch();
@@ -30,19 +31,23 @@ const InstructorLectureList = () => {
 
   const [filterCourse, setFilterCourse] = useState("");
   const [filterStatus, setFilterStatus] = useState("");
-  const [selectedLecture, setSelectedLecture] = useState(null); // To hold the selected lecture
-  const [openDialog, setOpenDialog] = useState(false); // To control dialog visibility
+  const [selectedLecture, setSelectedLecture] = useState(null); 
+  const [openDialog, setOpenDialog] = useState(false); 
 
   useEffect(() => {
     dispatch(fetchLectures());
     dispatch(fetchCourses());
   }, [dispatch]);
 
-  const getCourseName = (id) => {
-    const course = courses.find((c) => c._id === id);
-    return course ? course.name : "Unknown";
-  };
 
+  const handleMarkAttended = async () => {
+    try {
+      const updatedLecture = await markLectureAsAttended(selectedLecture._id);
+      setSelectedLecture(updatedLecture); 
+    } catch (err) {
+      alert("Failed to mark lecture as attended");
+    }
+  };
   const filteredLectures = lectures.filter(
     (lecture) =>
       (filterCourse === "" || lecture.course._id === filterCourse) &&
@@ -137,6 +142,7 @@ const InstructorLectureList = () => {
       <Dialog open={openDialog}  sx={{ "& .MuiDialog-paper": { width: "100%", maxWidth: "1000px" } }} onClose={handleCloseDialog}>
         <DialogTitle>Lecture Details</DialogTitle>
         <DialogContent dividers>
+
   {selectedLecture ? (
     <Box>
       <Typography variant="h6" gutterBottom>
@@ -202,6 +208,21 @@ const InstructorLectureList = () => {
             Close
           </Button>
         </DialogActions>
+        <DialogActions>
+  {selectedLecture && selectedLecture.attendanceStatus !== "Attended" && (
+    <Button
+      onClick={() => handleMarkAsAttended(selectedLecture._id)}
+      color="success"
+      variant="contained"
+    >
+      Mark as Attended
+    </Button>
+  )}
+  <Button onClick={handleCloseDialog} variant="contained" color="primary">
+    Close
+  </Button>
+</DialogActions>
+
       </Dialog>
     </Box>
   );

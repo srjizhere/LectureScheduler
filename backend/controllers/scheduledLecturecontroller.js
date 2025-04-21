@@ -76,3 +76,24 @@ exports.deleteLecture = async (req, res) => {
     res.status(500).json({ error: error.message || "Server error" });
   }
 };
+
+
+exports.MarkAsAttended = async (req, res) => {
+  try {
+    const lectureId = req.params.id;
+
+    const updatedLecture = await ScheduledLecture.findByIdAndUpdate(
+      lectureId,
+      { attendanceStatus: "Attended" },
+      { new: true }
+    );
+
+    if (!updatedLecture) {
+      return res.status(404).json({ message: "Lecture not found" });
+    }
+
+    res.status(200).json(updatedLecture);
+  } catch (error) {
+    res.status(500).json({ message: "Failed to mark lecture as attended", error: error.message });
+  }
+}
