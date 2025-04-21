@@ -12,8 +12,9 @@ exports.getCourses = async (req, res) => {
 exports.createCourse = async (req, res) => {
   try {
     const  {name,level,image,description,videos} = req.body;
+    const lectures = videos.map((v) => ({ title: v.title, video: v.url }));
 
-    const course = new Course({name,level,image,description,lectures:videos});
+    const course = new Course({name,level,image,description,lectures:lectures});
     await course.save();
     res.json(course);
   } catch (err) {

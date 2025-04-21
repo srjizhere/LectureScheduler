@@ -14,6 +14,8 @@ import ScheduleLecture from "./pages/admin/ScheduleLecture";
 import LectureListAdmin from "./pages/components/LectureList";
 
 import InstructorLectures from "./pages/instructor/LectureList";
+import InstructorDashboard from "./pages/instructor/InstructorDashboard";
+import InstructorLectureList from "./pages/instructor/LectureList";
 
 function App() {
   return (
@@ -30,7 +32,8 @@ function App() {
           </Route>
 
           <Route path="/instructor" element={<InstructorLayout />}>
-            <Route index element={<InstructorLectures />} />
+            <Route index element={<InstructorDashboard />} />
+            <Route path="lectures" element={<InstructorLectureList />} />
           </Route>
         </Routes>
       </Router>

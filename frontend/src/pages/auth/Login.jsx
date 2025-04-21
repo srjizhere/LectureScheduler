@@ -10,7 +10,7 @@ import {
 const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { loading, error } = useSelector((state) => state.auth);
+  const {user, loading, error } = useSelector((state) => state.auth);
 
   const [formData, setFormData] = useState({
     email: "",
