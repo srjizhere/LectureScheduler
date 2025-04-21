@@ -43,7 +43,9 @@ const InstructorLectureList = () => {
   const handleMarkAttended = async () => {
     try {
       const updatedLecture = await markLectureAsAttended(selectedLecture._id);
-      setSelectedLecture(updatedLecture); 
+      setSelectedLecture(updatedLecture); // update UI if needed
+      dispatch(fetchLectures());
+
     } catch (err) {
       alert("Failed to mark lecture as attended");
     }
@@ -204,14 +206,9 @@ const InstructorLectureList = () => {
 </DialogContent>
 
         <DialogActions>
-          <Button onClick={handleCloseDialog} variant="contained">
-            Close
-          </Button>
-        </DialogActions>
-        <DialogActions>
   {selectedLecture && selectedLecture.attendanceStatus !== "Attended" && (
     <Button
-      onClick={() => handleMarkAsAttended(selectedLecture._id)}
+      onClick={() => handleMarkAttended(selectedLecture._id)}
       color="success"
       variant="contained"
     >
